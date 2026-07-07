@@ -7,9 +7,23 @@ pub struct Rgb {
     b: u8,
 }
 
+impl Rgb {
+    pub fn new(red: u8, green: u8, blue: u8) -> Self {
+        Self {
+            r: red,
+            g: green,
+            b: blue,
+        }
+    }
+
+    pub fn get(&self) -> [u8; 3] {
+        [self.r, self.g, self.b]
+    }
+}
+
 impl From<ColorCode> for Rgb {
     fn from(color_code: ColorCode) -> Self {
-        let hex = color_code.0.trim_start_matches('#');
+        let hex = color_code.get().trim_start_matches('#');
 
         let r = u8::from_str_radix(&hex[0..2], 16).unwrap();
         let g = u8::from_str_radix(&hex[2..4], 16).unwrap();
@@ -24,7 +38,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn success() {
+    fn new() {
         let color_code = ColorCode::new("#ffffff").unwrap();
         let rgb: Rgb = color_code.into();
         assert_eq!(
