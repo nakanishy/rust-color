@@ -1,3 +1,5 @@
-pub mod colorCode;
+pub mod color_code;
+pub mod rgb;
 
-pub use colorCode::*;
+pub use color_code::*;
+pub use rgb::*;
