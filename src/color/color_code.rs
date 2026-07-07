@@ -1,6 +1,6 @@
 use regex::Regex;
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ColorCode(pub String);
 
 impl ColorCode {
