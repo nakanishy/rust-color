@@ -44,8 +44,9 @@ mod tests {
     #[test]
     fn lighten() {
         let color_code = Rgb::new(0, 0, 0).into();
+        let effect = Lighten;
         let params = LightenParams::new(10).unwrap();
-        let result = Lighten.apply(color_code, params);
+        let result = effect.apply(color_code, params);
         assert_eq!(result, Rgb::new(127, 127, 127).into());
     }
 }
