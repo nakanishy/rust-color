@@ -12,18 +12,25 @@ impl ColorCode {
             return Err(anyhow::anyhow!("Invalid color code: {}", &value));
         }
         if value.len() == 7 {
-            return Ok(Self(value.to_string()));
+            return Ok(Self(value.to_string().to_lowercase()));
         }
-        Ok(Self(format!(
-            "#{0}{0}{1}{1}{2}{2}",
-            &value[0..1],
-            &value[1..2],
-            &value[2..3]
-        )))
+        Ok(Self(
+            format!(
+                "#{0}{0}{1}{1}{2}{2}",
+                &value[1..2],
+                &value[2..3],
+                &value[3..4]
+            )
+            .to_lowercase(),
+        ))
     }
 
     pub fn get(&self) -> &str {
         &self.0
+    }
+
+    pub fn to_rgb(self) -> Rgb {
+        self.into()
     }
 }
 
@@ -40,12 +47,18 @@ mod tests {
 
     #[test]
     fn new() {
-        assert!(ColorCode::new("#ffffff").is_ok());
-        assert!(ColorCode::new("#fFFfFF").is_ok());
-        assert!(ColorCode::new("#FFFFFF").is_ok());
-        assert!(ColorCode::new("#fff").is_ok());
-        assert!(ColorCode::new("#Fff").is_ok());
-        assert!(ColorCode::new("#FFF").is_ok());
+        let c = ColorCode::new("#ffffff").unwrap();
+        assert_eq!(c.get(), "#ffffff");
+        let c = ColorCode::new("#fFFffF").unwrap();
+        assert_eq!(c.get(), "#ffffff");
+        let c = ColorCode::new("#FFFFFF").unwrap();
+        assert_eq!(c.get(), "#ffffff");
+        let c = ColorCode::new("#fff").unwrap();
+        assert_eq!(c.get(), "#ffffff");
+        let c = ColorCode::new("#Fff").unwrap();
+        assert_eq!(c.get(), "#ffffff");
+        let c = ColorCode::new("#FFF").unwrap();
+        assert_eq!(c.get(), "#ffffff");
 
         assert!(ColorCode::new("#").is_err());
         assert!(ColorCode::new(" ").is_err());
