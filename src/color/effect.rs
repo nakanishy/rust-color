@@ -5,10 +5,20 @@ pub trait Effect {
     fn apply(&self, color_code: ColorCode, params: Self::Params) -> ColorCode;
 }
 
-struct Lighten;
+pub struct Lighten;
 
-struct LightenParams {
+pub struct LightenParams {
     percent: u8,
+}
+
+impl LightenParams {
+    pub fn new(percent: u8) -> anyhow::Result<Self> {
+        if percent <= 100 {
+            Ok(Self { percent })
+        } else {
+            Err(anyhow::anyhow!("Percent must be between 0 and 100."))
+        }
+    }
 }
 
 impl Effect for Lighten {
@@ -33,10 +43,9 @@ mod tests {
 
     #[test]
     fn lighten() {
-        let effect = Lighten;
         let color_code = Rgb::new(0, 0, 0).into();
-        let params = LightenParams { percent: 50 };
-        let result = effect.apply(color_code, params);
+        let params = LightenParams::new(10).unwrap();
+        let result = Lighten.apply(color_code, params);
         assert_eq!(result, Rgb::new(127, 127, 127).into());
     }
 }
