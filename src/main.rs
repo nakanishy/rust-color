@@ -1,4 +1,4 @@
-use crate::color::{ColorCode, LightenParams};
+use crate::color::ColorCode;
 
 mod color;
 

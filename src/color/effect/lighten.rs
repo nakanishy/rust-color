@@ -1,9 +1,4 @@
-use crate::color::{ColorCode, Rgb};
-
-pub trait Effect {
-    type Params;
-    fn apply(&self, color_code: ColorCode, params: Self::Params) -> ColorCode;
-}
+use crate::color::{ColorCode, Effect, Rgb};
 
 pub struct Lighten;
 
