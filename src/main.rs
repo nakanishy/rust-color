@@ -1,28 +1,40 @@
-use crate::color::{ColorCode, Effect, LightenParams, Palette};
+use crate::color::{ColorCode, Effect, Palette};
 use colored::Colorize;
 
 mod color;
 
 fn main() {
-    let palette = Palette::new(vec![
+    let mut color_codes = vec![
         ColorCode::new("#2ADFFF").unwrap(),
         ColorCode::new("#B3F3F2").unwrap(),
         ColorCode::new("#E1FAEE").unwrap(),
         ColorCode::new("#EF5A8C").unwrap(),
-    ]);
+    ];
+
+    let color_codes: Vec<_> = color_codes
+        .iter()
+        .cloned()
+        .cycle()
+        .take(8_000_000)
+        .collect();
+    let palette = Palette::new(color_codes);
     println!("Original:");
-    print_palette(&palette);
+    // print_palette(&palette);
 
     let mut new_palette = Palette::new(vec![]);
     palette.color_codes().iter().for_each(|c| {
-        // let effect = color::HueShift;
-        // let applied = effect.apply(c.clone(), HueShiftParams::new(260.0).unwrap());
-        let effect = color::Lighten;
-        let applied = effect.apply(c.clone(), LightenParams::new(70).unwrap());
+        let effect = color::HueShift;
+        let params = color::HueShiftParams::new(-10.0).unwrap();
+        let applied = effect.apply(c.clone(), params);
+
+        // let effect = color::Lighten;
+        // let params = LightenParams::new(30).unwrap();
+        // let applied = effect.apply(applied, params);
+
         new_palette.add_color(applied);
     });
     println!("Effect Applied:");
-    print_palette(&new_palette);
+    // print_palette(&new_palette);
 }
 
 fn print_palette(palette: &Palette) {

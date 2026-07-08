@@ -8,8 +8,8 @@ pub struct HueShiftParams {
 
 impl HueShiftParams {
     pub fn new(hue: f32) -> anyhow::Result<Self> {
-        if hue < 0.0 || hue > 360.0 {
-            anyhow::bail!("Hue must be between 0 and 360");
+        if hue < -360.0 || hue > 360.0 {
+            anyhow::bail!("Hue must be between -360 and 360");
         }
         Ok(Self { hue })
     }
@@ -26,7 +26,15 @@ impl Effect for HueShift {
     fn apply(&self, color_code: ColorCode, params: Self::Params) -> ColorCode {
         let mut hsl = color_code.to_hsl();
         let [h, _, _] = hsl.to_f32_array();
-        hsl.set_hue((h + params.hue).clamp(0.0, 360.0));
+        let new_hue = h + params.hue;
+        let new_hue = if new_hue > 360.0 {
+            new_hue - 360.0
+        } else if new_hue < 0.0 {
+            new_hue + 360.0
+        } else {
+            new_hue
+        };
+        hsl.set_hue(new_hue);
         hsl.into()
     }
 }
