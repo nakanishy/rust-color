@@ -25,6 +25,22 @@ impl Hsl {
 
         Ok(Self { h, s, l })
     }
+
+    pub fn to_f32_array(&self) -> [f32; 3] {
+        [self.h, self.s, self.l]
+    }
+
+    pub fn set_hue(&mut self, h: f32) {
+        self.h = h;
+    }
+
+    pub fn set_saturation(&mut self, s: f32) {
+        self.s = s;
+    }
+
+    pub fn set_lightness(&mut self, l: f32) {
+        self.l = l;
+    }
 }
 
 impl From<ColorCode> for Hsl {

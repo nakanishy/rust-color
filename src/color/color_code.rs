@@ -1,6 +1,6 @@
 use regex::Regex;
 
-use crate::color::Rgb;
+use crate::color::{Hsl, Rgb};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ColorCode(String);
@@ -32,12 +32,52 @@ impl ColorCode {
     pub fn to_rgb(self) -> Rgb {
         self.into()
     }
+
+    pub fn to_hsl(self) -> Hsl {
+        self.into()
+    }
 }
 
 impl From<Rgb> for ColorCode {
     fn from(rgb: Rgb) -> Self {
         let [r, g, b] = rgb.to_u8_array();
         ColorCode(format!("#{:02x}{:02x}{:02x}", r, g, b))
+    }
+}
+
+impl From<Hsl> for ColorCode {
+    fn from(hsl: Hsl) -> Self {
+        let [h, s, l] = hsl.to_f32_array();
+        let h = h.clamp(0.0, 360.0);
+        let s = s.clamp(0.0, 100.0) / 100.0;
+        let l = l.clamp(0.0, 100.0) / 100.0;
+
+        let c = (1.0 - (2.0 * l - 1.0).abs()) * s;
+        let hh = h / 60.0;
+        let x = c * (1.0 - (hh % 2.0 - 1.0).abs());
+
+        let (r1, g1, b1) = if (0.0..1.0).contains(&hh) {
+            (c, x, 0.0)
+        } else if (1.0..2.0).contains(&hh) {
+            (x, c, 0.0)
+        } else if (2.0..3.0).contains(&hh) {
+            (0.0, c, x)
+        } else if (3.0..4.0).contains(&hh) {
+            (0.0, x, c)
+        } else if (4.0..5.0).contains(&hh) {
+            (x, 0.0, c)
+        } else {
+            (c, 0.0, x)
+        };
+
+        let m = l - c / 2.0;
+
+        let r = ((r1 + m) * 255.0).round() as u8;
+        let g = ((g1 + m) * 255.0).round() as u8;
+        let b = ((b1 + m) * 255.0).round() as u8;
+
+        let rgb = Rgb::new(r, g, b);
+        rgb.into()
     }
 }
 
