@@ -36,7 +36,7 @@ impl ColorCode {
 
 impl From<Rgb> for ColorCode {
     fn from(rgb: Rgb) -> Self {
-        let [r, g, b] = rgb.get();
+        let [r, g, b] = rgb.to_u8_array();
         ColorCode(format!("#{:02x}{:02x}{:02x}", r, g, b))
     }
 }

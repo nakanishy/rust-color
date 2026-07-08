@@ -16,7 +16,7 @@ impl Rgb {
         }
     }
 
-    pub fn get(&self) -> [u8; 3] {
+    pub fn to_u8_array(&self) -> [u8; 3] {
         [self.r, self.g, self.b]
     }
 }
