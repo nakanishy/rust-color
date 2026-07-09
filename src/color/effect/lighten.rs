@@ -1,7 +1,6 @@
 use crate::color::{ColorCode, Effect, Rgb};
 
-pub struct Lighten;
-
+#[derive(Debug, Clone)]
 pub struct LightenParams {
     percent: u8,
 }
@@ -16,17 +15,25 @@ impl LightenParams {
     }
 }
 
-impl Effect for Lighten {
-    type Params = LightenParams;
+pub struct Lighten {
+    params: LightenParams,
+}
 
-    fn apply(&self, color_code: ColorCode, params: LightenParams) -> ColorCode {
+impl Lighten {
+    pub fn new(params: LightenParams) -> Self {
+        Self { params }
+    }
+}
+
+impl Effect for Lighten {
+    fn apply(&self, color_code: ColorCode) -> ColorCode {
         let rgb: Rgb = color_code.into();
         let [r, g, b] = rgb.to_u8_array();
 
         Rgb::new(
-            r + ((255. - r as f32) * (params.percent as f32 / 100.)) as u8,
-            g + ((255. - g as f32) * (params.percent as f32 / 100.)) as u8,
-            b + ((255. - b as f32) * (params.percent as f32 / 100.)) as u8,
+            r + ((255. - r as f32) * (self.params.percent as f32 / 100.)) as u8,
+            g + ((255. - g as f32) * (self.params.percent as f32 / 100.)) as u8,
+            b + ((255. - b as f32) * (self.params.percent as f32 / 100.)) as u8,
         )
         .into()
     }
@@ -39,9 +46,9 @@ mod tests {
     #[test]
     fn lighten() {
         let color_code = Rgb::new(0, 0, 0).into();
-        let effect = Lighten;
         let params = LightenParams::new(10).unwrap();
-        let result = effect.apply(color_code, params);
+        let effect = Lighten::new(params);
+        let result = effect.apply(color_code);
         assert_eq!(result, Rgb::new(127, 127, 127).into());
     }
 }

@@ -1,7 +1,6 @@
 use crate::color::{ColorCode, Effect};
 
-pub struct HueShift;
-
+#[derive(Debug, Clone)]
 pub struct HueShiftParams {
     hue: f32,
 }
@@ -15,6 +14,16 @@ impl HueShiftParams {
     }
 }
 
+pub struct HueShift {
+    params: HueShiftParams,
+}
+
+impl HueShift {
+    pub fn new(params: HueShiftParams) -> Self {
+        Self { params }
+    }
+}
+
 impl Default for HueShiftParams {
     fn default() -> Self {
         Self { hue: 0.0 }
@@ -22,11 +31,10 @@ impl Default for HueShiftParams {
 }
 
 impl Effect for HueShift {
-    type Params = HueShiftParams;
-    fn apply(&self, color_code: ColorCode, params: Self::Params) -> ColorCode {
+    fn apply(&self, color_code: ColorCode) -> ColorCode {
         let mut hsl = color_code.to_hsl();
         let [h, _, _] = hsl.to_f32_array();
-        let new_hue = h + params.hue;
+        let new_hue = h + self.params.hue;
         let new_hue = if new_hue > 360.0 {
             new_hue - 360.0
         } else if new_hue < 0.0 {
