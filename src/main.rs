@@ -1,4 +1,4 @@
-use crate::color::{ColorCode, Effect, Palette};
+use crate::color::{ColorCode, Effect, Palette, RgbHist};
 use colored::Colorize;
 
 mod color;
@@ -40,16 +40,10 @@ fn main() {
     println!("Effect Applied:");
     print_palette(&new_palette);
 
-    // ヒストグラムの計算
-    let mut hist = [[0usize; 256]; 3];
-    for c in new_palette.color_codes().iter() {
-        let [r, g, b] = c.clone().to_rgb().to_u8_array();
-        hist[0][r as usize] += 1;
-        hist[1][g as usize] += 1;
-        hist[2][b as usize] += 1;
-    }
+    let hist = RgbHist::new(&new_palette);
 
     let labels = ["R", "G", "B"];
+    let hist = [hist.red(), hist.green(), hist.blue()];
     for ch in 0..3 {
         println!("{}:", labels[ch]);
         for (i, count) in hist[ch].iter().enumerate() {
