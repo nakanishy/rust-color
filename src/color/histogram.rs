@@ -31,6 +31,6 @@ impl RgbHist {
     }
 
     pub fn blue(&self) -> [usize; 256] {
-        self.g
+        self.b
     }
 }

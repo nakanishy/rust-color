@@ -4,7 +4,7 @@ use colored::Colorize;
 mod color;
 
 fn main() {
-    let color_codes = vec![
+    let mut color_codes = vec![
         ColorCode::new("#2ADFFF").unwrap(),
         ColorCode::new("#23DdFF").unwrap(),
         ColorCode::new("#2ADFFF").unwrap(),
@@ -14,15 +14,14 @@ fn main() {
         ColorCode::new("#E1FAEE").unwrap(),
         ColorCode::new("#EF5A8C").unwrap(),
     ];
+    // let color_codes: Vec<_> = color_codes.into_().cycle().take(1_000_000).collect();
     let palette = Palette::new(color_codes);
     println!("Original:");
     print_palette(&palette);
 
     let effects: Vec<Box<dyn Effect>> = vec![
-        Box::new(color::HueShift::new(
-            color::HueShiftParams::new(10.0).unwrap(),
-        )),
-        Box::new(color::Lighten::new(color::LightenParams::new(30).unwrap())),
+        Box::new(color::HueShift::new(10.).unwrap()),
+        Box::new(color::Lighten::new(30).unwrap()),
     ];
 
     let mut new_palette = Palette::new(vec![]);
