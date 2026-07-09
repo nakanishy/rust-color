@@ -14,7 +14,6 @@ fn main() {
     println!("Original:");
     print_palette(&palette);
 
-    let mut new_palette = Palette::new(vec![]);
     let effects: Vec<Box<dyn Effect>> = vec![
         Box::new(color::HueShift::new(
             color::HueShiftParams::new(10.0).unwrap(),
@@ -22,6 +21,7 @@ fn main() {
         Box::new(color::Lighten::new(color::LightenParams::new(30).unwrap())),
     ];
 
+    let mut new_palette = Palette::new(vec![]);
     for c in palette.color_codes().iter() {
         let mut new_color_code = c.clone();
 
