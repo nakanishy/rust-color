@@ -4,18 +4,12 @@ use colored::Colorize;
 mod color;
 
 fn main() {
-    let mut color_codes = vec![
+    let color_codes = vec![
         ColorCode::new("#2ADFFF").unwrap(),
         ColorCode::new("#B3F3F2").unwrap(),
         ColorCode::new("#E1FAEE").unwrap(),
         ColorCode::new("#EF5A8C").unwrap(),
     ];
-    // let color_codes: Vec<_> = color_codes
-    //     .iter()
-    //     .cloned()
-    //     .cycle()
-    //     .take(8_000_000)
-    //     .collect();
     let palette = Palette::new(color_codes);
     println!("Original:");
     print_palette(&palette);
@@ -27,13 +21,18 @@ fn main() {
         )),
         Box::new(color::Lighten::new(color::LightenParams::new(30).unwrap())),
     ];
-    palette.color_codes().iter().for_each(|c| {
-        let mut c = c.clone();
+
+    for c in palette.color_codes().iter() {
+        let mut new_color_code = c.clone();
+
+        // Apply every effects to new_color_code
         for effect in effects.iter() {
-            c = effect.apply(c);
+            new_color_code = effect.apply(new_color_code);
         }
-        new_palette.add_color(c);
-    });
+
+        new_palette.add_color(new_color_code);
+    }
+
     println!("Effect Applied:");
     print_palette(&new_palette);
 }
